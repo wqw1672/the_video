@@ -1,0 +1,31 @@
+.PHONY: all clean
+
+#Add all source *.cpp files
+SRC=$(shell find -name '*.cpp')
+
+#Create all source *.cpp Mapping source *.o files
+OBJ=$(SRC:.cpp=.o)
+
+#Create the execute file name
+ELF= main
+
+INCLUDES := -I. 
+LIBS :=
+
+#Add gdb Debug and library ncurses
+CFLAG=-Wall -g $(INCLUDES) 
+LDFLAG=-pthread -lrt -lsqlite3$(LIBS)
+CXX=g++ $(CFLAG)
+
+all:$(ELF)
+
+$(ELF):$(OBJ)
+	$(CXX) $^ -o $@ $(LDFLAG)
+
+
+#%.o:%.cpp
+.cpp.o:
+	$(CXX) -c $(@D)/$(<F) -o $(@D)/$(@F)
+
+clean:
+	-rm -f $(OBJ) *.o $(ELF)
